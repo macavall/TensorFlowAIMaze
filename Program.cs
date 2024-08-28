@@ -40,19 +40,47 @@ class MazeSolver
             int row = position.row, col = position.col;
             switch (action)
             {
-                case "up": return (Math.Max(row - 1, 0), col);
-                case "down": return (Math.Min(Convert.ToInt32(row + 1), Convert.ToInt32(maze.shape[0] - 1)), col);
-                case "left": return (row, Math.Max(col - 1, 0));
-                case "right": return (row, Convert.ToInt32(Math.Min(col + 1, maze.shape[1] - 1)));
+                case "up":
+                    {
+                        return (Math.Max(row - 1, 0), col);
+                    }
+                case "down":
+                    {
+                        return(Math.Min(Convert.ToInt32(row + 1), Convert.ToInt32(maze.shape[0] - 1)), col);
+                    }
+                case "left":
+                    {
+                        return (row, Math.Max(col - 1, 0));
+                    }
+                case "right":
+                    {
+                        return (row, Convert.ToInt32(Math.Min(col + 1, maze.shape[1] - 1)));
+                    }
                 default: return position;
             }
         }
 
         int GetReward((int row, int col) position)
         {
-            if (position == goal) return 10; // Reward for reaching the goal
-            if (maze[position.row, position.col] == 1) return -1; // Penalty for hitting a wall
-            return 0; // Neutral reward
+            if (position == goal)
+            {
+                // Reward for reaching the goal
+
+                Console.WriteLine($"Goal Reached at Position: {position.row}, {position.col}");
+
+                return 10;
+            }
+            if (maze[position.row, position.col] == 1)
+            {
+                // Penalty for hitting a wall
+
+                Console.WriteLine($"Position in x, y: {position.row}, {position.col}");
+
+                return -1;
+            }
+
+            // Neutral reward
+            return 0;
         }
 
         // Training the Q-table
