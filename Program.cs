@@ -22,14 +22,16 @@ class MazeSolver
     static void Main(string[] args)
     {
         // Define the maze as a 2D numpy array (0 - path, 1 - wall)
-        var maze = np.array(new int[,]
+        int[,] mazeArr = new int[,]
         {
             { 0, 1, 0, 0, 0, 0 },
             { 0, 1, 1, 1, 1, 0 },
             { 0, 0, 1, 0, 0, 0 },
             { 1, 0, 1, 0, 1, 0 },
             { 0, 0, 0, 0, 0, 0 }
-        });
+        };
+
+        var maze = np.array(mazeArr);
 
         // Define the start and goal positions
         var start = (row: 0, col: 0);
@@ -143,7 +145,7 @@ class MazeSolver
         }
 
         // Extract the optimal path
-        var optimalPath = new System.Collections.Generic.List<(int row, int col)>();
+        var optimalPath = new List<(int row, int col)>();
         var currentPosition = start; // Changed from 'position' to 'currentPosition'
         optimalPath.Add(currentPosition);
         while (currentPosition != goal)
@@ -159,6 +161,55 @@ class MazeSolver
         foreach (var pos in optimalPath)
         {
             Console.WriteLine($"({pos.row}, {pos.col})");
+        }
+
+        Console.WriteLine("\n\n Original Maze\n\n");
+
+        PrintMaze(mazeArr);
+
+        Console.WriteLine("\n\n");
+
+        PrintMazeOptimalPath(mazeArr, optimalPath);
+
+        Console.ReadLine();
+
+    }
+
+    public static void PrintMaze(int[,] maze)
+    {
+        int rows = maze.GetLength(0);
+        int cols = maze.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                Console.Write(maze[i, j] + " ");
+            }
+            Console.WriteLine(); // Move to the next line after printing each row
+        }
+    }
+
+    public static void PrintMazeOptimalPath(int[,] maze, List<(int row, int col)> optPath)
+    {
+        int rows = maze.GetLength(0);
+        int cols = maze.GetLength(1);
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                // Check if the current position is part of the optimal path
+                if (optPath.Contains((i, j)))
+                {
+                    Console.Write("* ");
+                }
+                else
+                {
+                    Console.Write(maze[i, j] + " ");
+                }
+            }
+            Console.WriteLine(); // Move to the next line after printing each row
         }
     }
 }
