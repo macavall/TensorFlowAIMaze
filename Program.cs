@@ -5,21 +5,35 @@ using static Tensorflow.Binding;
 
 class MazeSolver
 {
+    public static  List<string> CheckList = new List<string>();
+
+    public static void CheckPositionHistory((int row, int col) position, string direction)
+    {
+        var myString = $"{position.row}, {position.col}, {direction}";
+
+        if (!CheckList.Any(x => x == myString))
+        {
+            // Add the entry to the list if it doesn't already exist
+            CheckList.Add(myString);
+            Console.WriteLine(myString);
+        }
+    }
+
     static void Main(string[] args)
     {
         // Define the maze as a 2D numpy array (0 - path, 1 - wall)
         var maze = np.array(new int[,]
         {
-            { 0, 1, 0, 1, 1, 1 },
-            { 0, 1, 0, 0, 0, 1 },
-            { 0, 1, 0, 1, 0, 0 },
+            { 0, 1, 0, 0, 0, 0 },
             { 0, 1, 1, 1, 1, 0 },
+            { 0, 0, 1, 0, 0, 0 },
+            { 1, 0, 1, 0, 1, 0 },
             { 0, 0, 0, 0, 0, 0 }
         });
 
         // Define the start and goal positions
         var start = (row: 0, col: 0);
-        var goal = (row: 2, col: 2);
+        var goal = (row: 0, col: 2);
 
         // Define the actions (up, down, left, right)
         var actions = new[] { "up", "down", "left", "right" };
@@ -66,7 +80,7 @@ class MazeSolver
             {
                 // Reward for reaching the goal
 
-                Console.WriteLine($"Goal Reached at Position: {position.row}, {position.col}");
+                //Console.WriteLine($"Goal Reached at Position: {position.row}, {position.col}");
 
                 return 10;
             }
@@ -74,7 +88,7 @@ class MazeSolver
             {
                 // Penalty for hitting a wall
 
-                Console.WriteLine($"Position in x, y: {position.row}, {position.col}");
+                //Console.WriteLine($"Position in x, y: {position.row}, {position.col}");
 
                 return -1;
             }
@@ -103,6 +117,8 @@ class MazeSolver
 
                 var action = actions[actionIdx];
                 var nextPosition = GetNextPosition(position, action);
+
+                CheckPositionHistory(position, action);
 
                 // Get the reward for the next position
                 int reward = GetReward(nextPosition);
